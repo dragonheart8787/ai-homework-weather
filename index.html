@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>天氣查詢</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+    <header class="top">
+      <h1>天氣查詢</h1>
+      <button type="button" id="btn-settings" class="btn" aria-expanded="false" aria-controls="settings">設定</button>
+    </header>
+
+    <section id="settings" class="panel" hidden aria-labelledby="settings-title">
+      <h2 id="settings-title" class="panel-title">設定</h2>
+      <p class="hint">API key 只會存在這個瀏覽器的 localStorage，不會寫進任何檔案，也不會進版控。欄位不會回填已儲存的 key。</p>
+
+      <form id="form-owm" class="field-group" autocomplete="off">
+        <label for="owm-key">OpenWeatherMap API key</label>
+        <div class="row">
+          <input id="owm-key" name="owm-key" type="password" spellcheck="false" autocapitalize="off" autocomplete="off">
+          <button type="button" class="btn" data-reveal="owm-key" aria-pressed="false">顯示</button>
+        </div>
+        <div class="row">
+          <button type="submit" class="btn btn-primary">儲存</button>
+          <button type="button" id="owm-clear" class="btn">清除</button>
+          <span id="owm-status" class="status" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+
+      <form id="form-kucgu" class="field-group" autocomplete="off">
+        <label for="kucgu-key">KUCGU API key</label>
+        <p class="hint">目前沒有任何功能使用這把 key，這裡只是先預留儲存位置。</p>
+        <div class="row">
+          <input id="kucgu-key" name="kucgu-key" type="password" spellcheck="false" autocapitalize="off" autocomplete="off">
+          <button type="button" class="btn" data-reveal="kucgu-key" aria-pressed="false">顯示</button>
+        </div>
+        <div class="row">
+          <button type="submit" class="btn btn-primary">儲存</button>
+          <button type="button" id="kucgu-clear" class="btn">清除</button>
+          <span id="kucgu-status" class="status" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </section>
+
+    <section class="search" aria-label="搜尋城市">
+      <form id="search-form" role="search">
+        <label for="q" class="visually-hidden">城市名稱</label>
+        <div class="row">
+          <input id="q" name="q" type="search" placeholder="輸入城市名稱，例如 台北 或 Tokyo" autocomplete="off" maxlength="80">
+          <button type="submit" class="btn btn-primary">搜尋</button>
+        </div>
+      </form>
+      <div class="row tools">
+        <button type="button" id="btn-geo" class="btn">使用目前位置</button>
+        <div class="unit" role="group" aria-label="溫度單位">
+          <button type="button" class="btn" data-unit="metric" aria-pressed="true">°C</button>
+          <button type="button" class="btn" data-unit="imperial" aria-pressed="false">°F</button>
+        </div>
+      </div>
+      <div id="recent-wrap" class="recent" hidden>
+        <span class="recent-label">最近搜尋</span>
+        <ul id="recent" class="recent-list"></ul>
+        <button type="button" id="recent-clear" class="link">清除紀錄</button>
+      </div>
+    </section>
+
+    <main id="view" tabindex="-1" aria-live="polite" aria-busy="false">
+      <noscript><p class="msg msg-error">這個頁面需要啟用 JavaScript 才能使用。</p></noscript>
+    </main>
+
+    <footer class="foot">
+      <p>資料來源：OpenWeatherMap</p>
+    </footer>
+  </div>
+
+  <script src="kucgu.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
