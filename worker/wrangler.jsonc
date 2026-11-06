@@ -1,0 +1,6 @@
+{
+  // Worker 名稱必須與 Cloudflare 連結 GitHub 時設定的名稱相同
+  "name": "kucgu-proxy",
+  "main": "worker.js",
+  "compatibility_date": "2025-09-01"
+}
