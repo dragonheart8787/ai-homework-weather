@@ -52,6 +52,19 @@
           <span id="kucgu-status" class="status" role="status" aria-live="polite"></span>
         </div>
       </form>
+
+      <form id="form-kucgu-url" class="field-group" autocomplete="off" novalidate>
+        <label for="kucgu-url">KUCGU 伺服器網址</label>
+        <p class="hint">預設是 https://kucgu.replit.app。如果瀏覽器因 CORS 讀不到回應，請部署 worker/ 資料夾的代理，並把 workers.dev 網址填在這裡。key 會送到這個網址，只填你信任的伺服器。</p>
+        <div class="row">
+          <input id="kucgu-url" name="kucgu-url" type="text" inputmode="url" spellcheck="false" autocapitalize="off" autocomplete="off">
+        </div>
+        <div class="row">
+          <button type="submit" class="btn btn-primary">儲存</button>
+          <button type="button" id="kucgu-url-reset" class="btn">恢復預設</button>
+          <span id="kucgu-url-status" class="status" role="status" aria-live="polite"></span>
+        </div>
+      </form>
     </section>
 
     <div class="tabs" role="tablist" aria-label="功能分頁">

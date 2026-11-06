@@ -17,7 +17,8 @@
 ├── challenges.js    五項挑戰的設定陣列、流程、欄位驗證、Next Action
 ├── api-console.js   API Console（記憶體內最近 20 筆）
 ├── challenges-ui.js 挑戰區畫面與分頁切換
-├── tests/           Node 內建測試（遮罩、傳輸層、挑戰流程、Next Action）
+├── worker/          KUCGU 的 CORS 代理（Cloudflare Worker），部署步驟見 worker/README.md
+├── tests/           Node 內建測試（遮罩、傳輸層、挑戰流程、Next Action、伺服器網址、Worker）
 ├── .gitignore
 └── README.md
 ```
@@ -77,6 +78,10 @@ key 只存在使用者自己瀏覽器的 localStorage，不會上傳到伺服器
 - 回應不是 2xx、不是 JSON、缺少必要欄位，各自顯示不同訊息，不會當成成功，也不會用預設值補欄位。
 - 畫面只顯示伺服器最後一次回應的 `total_score`，前端不自己計分。
 - 逾時：KUCGU 30 秒，OpenWeatherMap 15 秒。
+
+### 伺服器網址與 CORS 代理
+
+KUCGU 伺服器沒有回傳 CORS 標頭，瀏覽器讀不到回應。解法是部署 `worker/` 的 Cloudflare Worker 代理（手機即可，步驟見 [worker/README.md](worker/README.md)），再到設定面板的「KUCGU 伺服器網址」填入 workers.dev 網址。預設值是 `https://kucgu.replit.app`，網址必須是 https，結尾斜線會自動去掉。key 會送到你填的網址，只填你信任的伺服器。
 
 ### API Console 與 key 遮罩
 
