@@ -22,6 +22,14 @@
 └── README.md
 ```
 
+## 部署（GitHub Pages）
+
+push 到 `main` 或手動觸發 workflow 時，`.github/workflows/pages.yml` 會把網頁需要的檔案（不含 `tests/`、README 等）發佈到：
+
+`https://<GitHub 帳號>.github.io/<repo 名稱>/`
+
+key 只存在使用者自己瀏覽器的 localStorage，不會上傳到伺服器，也不在發佈的檔案裡。
+
 ## 本機執行
 
 1. 取得程式碼後，直接用瀏覽器開啟 `index.html`（雙擊，或把檔案拖進瀏覽器）。
