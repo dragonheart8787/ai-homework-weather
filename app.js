@@ -538,6 +538,28 @@
   }));
   syncAuthMode();
 
+  /* KUCGU 伺服器網址（key 以外的設定，可以安全地回填顯示） */
+  function refreshBaseUrl() {
+    if (!window.Kucgu) { setStatus('kucgu-url-status', 'kucgu.js 沒有載入。', true); return; }
+    const r = Kucgu.resolveBaseUrl ? Kucgu.resolveBaseUrl() : { ok: true, value: Kucgu.getBaseUrl() };
+    $('kucgu-url').value = r.ok ? r.value : (localStorage.getItem(Kucgu.BASE_URL_STORAGE) || '');
+    if (!r.ok) setStatus('kucgu-url-status', '已儲存的網址不正確：' + r.message, true);
+    else setStatus('kucgu-url-status', Kucgu.isDefaultBaseUrl() ? '目前使用：預設網址' : '目前使用：自訂網址（代理）');
+  }
+  $('form-kucgu-url').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!window.Kucgu) { setStatus('kucgu-url-status', 'kucgu.js 沒有載入，無法儲存。', true); return; }
+    const r = Kucgu.setBaseUrl($('kucgu-url').value);
+    if (!r.ok) { setStatus('kucgu-url-status', r.message + '（沒有儲存）', true); return; }
+    $('kucgu-url').value = r.value;
+    setStatus('kucgu-url-status', '已儲存。' + (Kucgu.isDefaultBaseUrl() ? '目前使用預設網址。' : '之後的請求會改送到這個網址。'));
+  });
+  $('kucgu-url-reset').addEventListener('click', () => {
+    if (!window.Kucgu || !Kucgu.clearBaseUrl()) { setStatus('kucgu-url-status', '無法恢復預設，瀏覽器拒絕存取 localStorage。', true); return; }
+    refreshBaseUrl();
+    setStatus('kucgu-url-status', '已恢復預設網址。');
+  });
+
   document.querySelectorAll('[data-reveal]').forEach((b) => b.addEventListener('click', () => {
     const input = $(b.getAttribute('data-reveal'));
     const show = input.type === 'password';
@@ -559,5 +581,6 @@
   syncUnitButtons();
   renderRecent();
   refreshKeyStatus();
+  refreshBaseUrl();
   if (store.get(STORE.owmKey)) showEmpty(); else showGuide();
 })();

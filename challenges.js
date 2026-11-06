@@ -84,7 +84,9 @@
         case 'network':
           return svc === 'owm'
             ? '網路失敗，請檢查網路連線並查看 DevTools Console'
-            : '網路失敗，或被瀏覽器的 CORS 擋下，兩者在瀏覽器端無法區分，請查看 DevTools Console；若是 CORS，可到設定切換認證方式';
+            : rec.usingDefaultBase === false
+              ? '網路失敗，或被瀏覽器的 CORS 擋下（兩者在瀏覽器端無法區分，請查看 DevTools Console）。請確認 Worker 已部署且網址正確'
+              : '網路失敗，或被瀏覽器的 CORS 擋下（兩者在瀏覽器端無法區分，請查看 DevTools Console）。請到設定改填代理網址';
         case 'http': {
           const s = rec.status;
           if (s === 401 || s === 403) return 'API key 錯誤或未設定，請檢查設定面板';
@@ -96,6 +98,7 @@
         case 'not_json': return '回應不是 JSON，不視為成功，請查看原始回應';
         case 'invalid_response':
           return '回應缺少必要欄位或型別錯誤（' + (err.problems || []).join(', ') + '），不視為成功，請查看原始回應';
+        case 'bad_base_url': return '伺服器網址設定不正確，請到設定重新填寫，或按「恢復預設」';
         case 'storage': return 'sessionStorage 無法寫入，請允許網站資料或關閉無痕模式後重新執行步驟 2';
         case 'aborted': return '請求已取消，請重新執行';
         default: return '發生未預期的錯誤，請查看錯誤訊息';

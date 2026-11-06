@@ -242,8 +242,11 @@ const TABLE = [
   ['HTTP 500', R('hello', { status: 500, error: E('http') }), '伺服器錯誤，稍後再試'],
   ['HTTP 503', R('hello', { status: 503, error: E('http') }), '伺服器錯誤，稍後再試'],
   ['逾時', R('hello', { status: null, error: E('timeout') }), '伺服器可能正在啟動中（Replit 冷啟動），請再試一次'],
-  ['TypeError 無 status', R('hello', { status: null, error: E('network', { name: 'TypeError' }) }),
-    '網路失敗，或被瀏覽器的 CORS 擋下，兩者在瀏覽器端無法區分，請查看 DevTools Console；若是 CORS，可到設定切換認證方式']
+  ['TypeError 無 status，使用預設網址', R('hello', { status: null, usingDefaultBase: true, error: E('network', { name: 'TypeError' }) }),
+    '網路失敗，或被瀏覽器的 CORS 擋下（兩者在瀏覽器端無法區分，請查看 DevTools Console）。請到設定改填代理網址'],
+  ['TypeError 無 status，已使用代理網址', R('hello', { status: null, usingDefaultBase: false, error: E('network', { name: 'TypeError' }) }),
+    '網路失敗，或被瀏覽器的 CORS 擋下（兩者在瀏覽器端無法區分，請查看 DevTools Console）。請確認 Worker 已部署且網址正確'],
+  ['伺服器網址設定錯誤', R('hello', { status: null, error: E('bad_base_url') }), '伺服器網址設定不正確，請到設定重新填寫，或按「恢復預設」']
 ];
 TABLE.forEach(([name, rec, expected]) => test('Next Action：' + name, () => assert.equal(C.nextAction(rec), expected)));
 
