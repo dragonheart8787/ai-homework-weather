@@ -1,0 +1,20 @@
+# API key 與本機設定，永遠不進版控
+.env
+.env.*
+*.local
+config.local.js
+keys.js
+secrets.*
+
+# 系統與編輯器
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# 工具產物
+node_modules/
+*.log
+
+# 部署時組裝的暫存資料夾
+_site/
