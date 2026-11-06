@@ -29,6 +29,23 @@ KUCGU 伺服器沒有回傳 CORS 標頭，瀏覽器讀不到回應。這個 Work
 13. 開啟天氣 App，按「設定」，在「KUCGU 伺服器網址」貼上複製的網址（不要加路徑），按儲存。
 14. 切到「KUCGU 挑戰」分頁，按步驟 1 測試。
 
+## 從 GitHub 部署
+
+不想手動貼程式碼時，可以讓 Cloudflare 直接從這個 repo 部署。`worker/wrangler.jsonc` 已經設定好 Worker 名稱與入口檔。
+
+1. Cloudflare 網頁，Workers & Pages，Create，選 Import a repository（連結 GitHub）。
+2. 授權並選這個 repo。
+3. Worker 名稱填 `kucgu-proxy`，必須與 `wrangler.jsonc` 的 `name` 相同。
+4. Root directory 填 `/worker`。
+5. Build command 留空。
+6. Deploy command 填 `npx wrangler deploy`。
+7. 把 Preview builds 關閉。
+8. 把 Cloudflare Access 關閉（否則瀏覽器的請求會被擋在登入頁，App 讀不到回應）。
+9. 點 Save and Deploy。之後每次 push 到連結的分支都會自動重新部署。
+10. 部署完成後複製 workers.dev 網址，之後的步驟與上面第 13 步相同。
+
+名稱不一致時部署會失敗或建立出另一個 Worker。
+
 ## 注意
 
 - 要換成別的網站來源時，修改 `worker.js` 最上方的 `ALLOWED_ORIGINS`，再重新 Deploy。
