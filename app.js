@@ -523,6 +523,21 @@
     refreshKeyStatus();
     setStatus('kucgu-status', '已清除。');
   });
+  function syncAuthMode() {
+    const mode = window.Kucgu ? Kucgu.getAuthMode() : 'header';
+    document.querySelectorAll('[name="kucgu-auth"]').forEach((r) => { r.checked = r.value === mode; });
+  }
+  document.querySelectorAll('[name="kucgu-auth"]').forEach((r) => r.addEventListener('change', () => {
+    if (!r.checked) return;
+    if (!window.Kucgu || !Kucgu.setAuthMode(r.value)) {
+      setStatus('kucgu-status', '無法儲存認證方式（localStorage 不可用）。', true);
+      syncAuthMode();
+      return;
+    }
+    setStatus('kucgu-status', '認證方式已切換為 ' + (r.value === 'query' ? 'Query 參數' : 'Header') + '。');
+  }));
+  syncAuthMode();
+
   document.querySelectorAll('[data-reveal]').forEach((b) => b.addEventListener('click', () => {
     const input = $(b.getAttribute('data-reveal'));
     const show = input.type === 'password';

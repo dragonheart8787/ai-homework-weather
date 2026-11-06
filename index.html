@@ -6,7 +6,7 @@
   <title>天氣查詢</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -35,7 +35,13 @@
 
       <form id="form-kucgu" class="field-group" autocomplete="off">
         <label for="kucgu-key">KUCGU API key</label>
-        <p class="hint">目前沒有任何功能使用這把 key，這裡只是先預留儲存位置。</p>
+        <p class="hint">用於「KUCGU 挑戰」分頁。key 只存在這個瀏覽器，API Console 內一律只顯示前 4 碼加 ****。</p>
+        <fieldset class="auth-mode">
+          <legend>認證方式</legend>
+          <label><input type="radio" name="kucgu-auth" value="header" checked> Header（X-API-Key，預設）</label>
+          <label><input type="radio" name="kucgu-auth" value="query"> Query 參數（?api_key=）</label>
+          <p class="hint">如果瀏覽器因 CORS 擋下請求，可以切成 Query 參數。選擇後立即生效。</p>
+        </fieldset>
         <div class="row">
           <input id="kucgu-key" name="kucgu-key" type="password" spellcheck="false" autocapitalize="off" autocomplete="off">
           <button type="button" class="btn" data-reveal="kucgu-key" aria-pressed="false">顯示</button>
@@ -48,6 +54,12 @@
       </form>
     </section>
 
+    <div class="tabs" role="tablist" aria-label="功能分頁">
+      <button type="button" class="tab" role="tab" id="tab-btn-weather" aria-selected="true" aria-controls="tab-weather">天氣</button>
+      <button type="button" class="tab" role="tab" id="tab-btn-kucgu" aria-selected="false" aria-controls="tab-kucgu" tabindex="-1">KUCGU 挑戰</button>
+    </div>
+
+    <div id="tab-weather" role="tabpanel" aria-labelledby="tab-btn-weather">
     <section class="search" aria-label="搜尋城市">
       <form id="search-form" role="search">
         <label for="q" class="visually-hidden">城市名稱</label>
@@ -73,13 +85,29 @@
     <main id="view" tabindex="-1" aria-live="polite" aria-busy="false">
       <noscript><p class="msg msg-error">這個頁面需要啟用 JavaScript 才能使用。</p></noscript>
     </main>
+    </div>
+
+    <div id="tab-kucgu" role="tabpanel" aria-labelledby="tab-btn-kucgu" hidden>
+      <section class="challenges" aria-labelledby="ch-title">
+        <h2 id="ch-title" class="section-title">KUCGU 挑戰</h2>
+        <div id="challenges-root"></div>
+      </section>
+      <section class="console" aria-label="API Console">
+        <div id="console-root"></div>
+      </section>
+    </div>
 
     <footer class="foot">
       <p>資料來源：OpenWeatherMap</p>
     </footer>
   </div>
 
+  <script src="mask.js"></script>
+  <script src="http.js"></script>
   <script src="kucgu.js"></script>
+  <script src="challenges.js"></script>
+  <script src="api-console.js"></script>
   <script src="app.js"></script>
+  <script src="challenges-ui.js"></script>
 </body>
 </html>

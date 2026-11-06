@@ -11,7 +11,13 @@
 ├── index.html   頁面骨架與設定面板
 ├── style.css    樣式
 ├── app.js       搜尋、定位、渲染、錯誤處理、設定面板
-├── kucgu.js     KUCGU client 骨架（只有基礎設施，沒有任何 endpoint）
+├── mask.js          key 遮罩（純函式）
+├── http.js          共用傳輸層：timeout、錯誤分類、紀錄物件（KUCGU 與 OpenWeatherMap 共用）
+├── kucgu.js         KUCGU client：request(method, path, {headers, query, body})
+├── challenges.js    五項挑戰的設定陣列、流程、欄位驗證、Next Action
+├── api-console.js   API Console（記憶體內最近 20 筆）
+├── challenges-ui.js 挑戰區畫面與分頁切換
+├── tests/           Node 內建測試（遮罩、傳輸層、挑戰流程、Next Action）
 ├── .gitignore
 └── README.md
 ```
@@ -53,6 +59,27 @@
 | 回應格式不符 | 不顯示資料並說明 |
 | 定位被拒絕 / 無法取得 / 逾時 | 各自獨立的說明 |
 
-## KUCGU
+## KUCGU 挑戰
 
-`kucgu.js` 只有 client 骨架：base URL（目前是空字串）、key 讀寫、統一的 `request()` 與錯誤分類。沒有任何 endpoint，驗證方式也尚未定義，相關位置都標了 `TODO(KUCGU 規格)`。在填入規格之前，呼叫 `request()` 會直接拋出 `not_configured`。目前沒有任何功能使用 KUCGU。
+切到「KUCGU 挑戰」分頁使用。設定面板有 KUCGU key 與「認證方式」：預設 Header（`X-API-Key`），若瀏覽器因 CORS 擋下請求，可切成 Query 參數（`?api_key=`）。
+
+- 五個步驟固定順序：Hello、取得 Weather 任務、抓天氣並提交、取得 Bonus 題目、提交 Bonus 答案。
+- 頁面載入與切換分頁不會呼叫任何 KUCGU endpoint，只有點按鈕才會。執行中所有步驟按鈕都會 disabled。
+- 步驟 3 用任務回傳的 city 與 country 查 OpenWeatherMap（`units=metric`），`main.temp` 不是有限數字或 OpenWeatherMap 失敗時，完全不呼叫 submit。
+- 回應不是 2xx、不是 JSON、缺少必要欄位，各自顯示不同訊息，不會當成成功，也不會用預設值補欄位。
+- 畫面只顯示伺服器最後一次回應的 `total_score`，前端不自己計分。
+- 逾時：KUCGU 30 秒，OpenWeatherMap 15 秒。
+
+### API Console 與 key 遮罩
+
+每次呼叫（含 OpenWeatherMap）都會顯示 Request、Response、Next Action，以及伺服器回傳的 status、message、pts_earned、total_score。紀錄只在記憶體，最多 20 筆，不寫入 localStorage。
+
+KUCGU key 與 OpenWeatherMap 的 `appid`，在 header、網址、回應內容、錯誤訊息中一律只顯示前 4 碼加 `****`。遮罩在紀錄物件建立時（`http.js`）完成，顯示層與 console 拿到的就已經是遮罩後的資料，不靠 CSS。程式不使用 `console.log` 輸出請求內容。
+
+## 測試
+
+```
+node --test tests/*.test.js
+```
+
+需要 Node 18 以上，沒有任何相依套件。測試用的 key 全部是假的（`cguku_test0000`、`owm_test0000`），fetch 也是假的，不會連網。
